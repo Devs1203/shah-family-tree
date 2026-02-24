@@ -1,0 +1,733 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Shah Family Tree — શાહ કુટુંબ વૃક્ષ</title>
+    <meta name="description" content="Visual family tree of the Kantilal Nathubhai Shah family — શાહ કુટુંબ વૃક્ષ" />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:wght@700&family=Noto+Sans+Gujarati:wght@400;600;700&display=swap"
+        rel="stylesheet" />
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    <script crossorigin src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <style>
+        *,
+        *::before,
+        *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        html,
+        body,
+        #root {
+            min-height: 100%;
+            width: 100%;
+            font-family: 'Inter', sans-serif;
+        }
+
+        body {
+            overflow-x: auto;
+            overflow-y: auto;
+            background: linear-gradient(180deg, #F8F6F0 0%, #EDE9DF 50%, #F2EFE8 100%);
+            background-attachment: fixed;
+        }
+
+        ::-webkit-scrollbar {
+            height: 8px;
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: rgba(0, 0, 0, 0.04);
+            border-radius: 8px;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: rgba(0, 0, 0, 0.15);
+            border-radius: 8px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: rgba(0, 0, 0, 0.25);
+        }
+    </style>
+</head>
+
+<body>
+    <div id="root"></div>
+    <script type="text/babel">
+        // ─── DATA ────────────────────────────────────────────────────────────────────
+        const BRANCH_COLORS = {
+            root: '#457B9D',
+            bhupendra: '#D64045',
+            harshad: '#1F9487',
+            dilip: '#D4723C',
+            nishit: '#6A4C93',
+            pushpa: '#C4577A',
+            rasila: '#3D85C6',
+            hansaben: '#81B29A',
+        };
+
+        const BRANCH_GRADIENTS = {
+            root: ['#457B9D', '#5A9BB5'],
+            bhupendra: ['#D64045', '#E8686C'],
+            harshad: ['#1F9487', '#2BBAA9'],
+            dilip: ['#D4723C', '#E8945F'],
+            nishit: ['#6A4C93', '#8B6DB5'],
+            pushpa: ['#C4577A', '#D87A98'],
+            rasila: ['#3D85C6', '#5FA0D8'],
+            hansaben: ['#81B29A', '#9DC8B2'],
+        };
+
+        const BRANCH_LABELS = {
+            bhupendra: 'Bhupendrabhai',
+            harshad: 'Harshadbhai',
+            dilip: 'Dilipkumar',
+            nishit: 'Nishit',
+            pushpa: 'Pushpaben',
+            rasila: 'Rasilaben',
+            hansaben: 'Hansaben',
+        };
+
+        // ─── DATA ────────────────────────────────────────────────────────────────
+        const MEMBERS = [
+            { id: 'kantilal', nameGuj: 'કાંતિલાલ નથુભાઈ શાહ', nameEn: 'Kantilal Nathubhai Shah', gender: 'M', gen: 1, spouseId: 'lilavanti', childrenIds: ['bhupendra', 'pushpa', 'rasila', 'hansaben', 'harshad', 'dilip', 'nishit'], branch: 'root' },
+            { id: 'lilavanti', nameGuj: 'લીલાવંતીબેન કાંતિલાલ શાહ', nameEn: 'Lilavantiben Kantilal Shah', gender: 'F', gen: 1, spouseId: 'kantilal', branch: 'root' },
+            { id: 'bhupendra', nameGuj: 'ભૂપેન્દ્રભાઈ કાન્તિલાલ શાહ', nameEn: 'Bhupendrabhai Kantilal Shah', gender: 'M', gen: 2, parentIds: ['kantilal', 'lilavanti'], spouseId: 'taruna', childrenIds: ['ruchir', 'purvansh'], branch: 'bhupendra' },
+            { id: 'taruna', nameGuj: 'તરુણાબેન ભૂપેન્દ્રભાઈ શાહ', nameEn: 'Tarunaben Bhupendrabhai Shah', gender: 'F', gen: 2, spouseId: 'bhupendra', branch: 'bhupendra' },
+            { id: 'harshad', nameGuj: 'હર્ષદભાઈ કાંતિલાલ શાહ', nameEn: 'Harshadbhai Kantilal Shah', gender: 'M', gen: 2, parentIds: ['kantilal', 'lilavanti'], spouseId: 'jyoti', childrenIds: ['jinesh', 'dijen'], branch: 'harshad' },
+            { id: 'jyoti', nameGuj: 'જ્યોતિબેન હર્ષદભાઈ શાહ', nameEn: 'Jyotiben Harshadbhai Shah', gender: 'F', gen: 2, spouseId: 'harshad', branch: 'harshad' },
+            { id: 'dilip', nameGuj: 'દિલીપકુમાર કાંતીલાલ શાહ', nameEn: 'Dilipkumar Kantilal Shah', gender: 'M', gen: 2, parentIds: ['kantilal', 'lilavanti'], spouseId: 'sudha', childrenIds: ['pratik', 'harshil'], branch: 'dilip' },
+            { id: 'sudha', nameGuj: 'સુધા દિલીપકુમાર શાહ', nameEn: 'Sudha Dilipkumar Shah', gender: 'F', gen: 2, spouseId: 'dilip', branch: 'dilip' },
+            { id: 'nishit', nameGuj: 'નિશિત કાંતિલાલ શાહ', nameEn: 'Nishit Kantilal Shah', gender: 'M', gen: 2, parentIds: ['kantilal', 'lilavanti'], spouseId: 'dharmishtha', childrenIds: ['apoorv', 'sanket'], branch: 'nishit' },
+            { id: 'dharmishtha', nameGuj: 'ધર્મિષ્ઠા નિશિતભાઈ શાહ', nameEn: 'Dharmishtha Nishitbhai Shah', gender: 'F', gen: 2, spouseId: 'nishit', branch: 'nishit' },
+            { id: 'pushpa', nameGuj: 'પુષ્પાબેન નવનીતરાઈ શાહ', nameEn: 'Pushpaben Navnitrai Shah', gender: 'F', gen: 2, parentIds: ['kantilal', 'lilavanti'], spouseId: 'navnitrai', branch: 'pushpa' },
+            { id: 'navnitrai', nameGuj: 'નવનીતરાઈ શાહ', nameEn: 'Navnitrai Shah', gender: 'M', gen: 2, spouseId: 'pushpa', childrenIds: ['prashant', 'rupin'], branch: 'pushpa' },
+            { id: 'rasila', nameGuj: 'રસીલાબેન વિનોદરાઈ શાહ', nameEn: 'Rasilaben Vinodrai Shah', gender: 'F', gen: 2, parentIds: ['kantilal', 'lilavanti'], spouseId: 'vinodrai', branch: 'rasila' },
+            { id: 'vinodrai', nameGuj: 'વિનોદરાઈ શાહ', nameEn: 'Vinodrai Shah', gender: 'M', gen: 2, spouseId: 'rasila', childrenIds: ['mona', 'shruti', 'malay'], branch: 'rasila' },
+            { id: 'hansaben', nameGuj: 'હંસાબેન વિનયકાંત શાહ', nameEn: 'Hansaben Vinaykant Shah', gender: 'F', gen: 2, parentIds: ['kantilal', 'lilavanti'], spouseId: 'vinaykant', branch: 'hansaben' },
+            { id: 'vinaykant', nameGuj: 'વિનયકાંત શાહ', nameEn: 'Vinaykant Shah', gender: 'M', gen: 2, spouseId: 'hansaben', childrenIds: ['hetal', 'keyur'], branch: 'hansaben' },
+            { id: 'ruchir', nameGuj: 'રુચિર ભૂપેન્દ્રભાઈ શાહ', nameEn: 'Ruchir Bhupendrabhai Shah', gender: 'M', gen: 3, parentIds: ['bhupendra', 'taruna'], spouseId: 'tejal', childrenIds: ['shrey'], branch: 'bhupendra' },
+            { id: 'tejal', nameGuj: 'તેજલ રુચિરભાઈ શાહ', nameEn: 'Tejal Ruchirbhai Shah', gender: 'F', gen: 3, spouseId: 'ruchir', branch: 'bhupendra' },
+            { id: 'purvansh', nameGuj: 'પૂર્વાંશ ભૂપેન્દ્રભાઈ શાહ', nameEn: 'Purvansh Bhupendrabhai Shah', gender: 'M', gen: 3, parentIds: ['bhupendra', 'taruna'], spouseId: 'dipali', childrenIds: ['dev', 'neel'], branch: 'bhupendra' },
+            { id: 'dipali', nameGuj: 'દિપાલી પૂર્વાંશભાઈ શાહ', nameEn: 'Dipali Purvanshbhai Shah', gender: 'F', gen: 3, spouseId: 'purvansh', branch: 'bhupendra' },
+            { id: 'jinesh', nameGuj: 'જિનેશ હર્ષદભાઈ શાહ', nameEn: 'Jinesh Harshadbhai Shah', gender: 'M', gen: 3, parentIds: ['harshad', 'jyoti'], spouseId: 'bina', childrenIds: ['naavya'], branch: 'harshad' },
+            { id: 'bina', nameGuj: 'બીના જિનેશભાઈ શાહ', nameEn: 'Bina Jineshbhai Shah', gender: 'F', gen: 3, spouseId: 'jinesh', branch: 'harshad' },
+            { id: 'dijen', nameGuj: 'દિજેન હર્ષદભાઈ શાહ', nameEn: 'Dijen Harshadbhai Shah', gender: 'M', gen: 3, parentIds: ['harshad', 'jyoti'], spouseId: 'munmun', childrenIds: ['veer', 'heet', 'hishita'], branch: 'harshad' },
+            { id: 'munmun', nameGuj: 'મુનમુન દિજેનભાઈ શાહ', nameEn: 'Munmun Dijenbhai Shah', gender: 'F', gen: 3, spouseId: 'dijen', branch: 'harshad' },
+            { id: 'pratik', nameGuj: 'પ્રતિક દિલીપકુમાર શાહ', nameEn: 'Pratik Dilipkumar Shah', gender: 'M', gen: 3, parentIds: ['dilip', 'sudha'], spouseId: 'trupti', childrenIds: ['het', 'jainam'], branch: 'dilip' },
+            { id: 'trupti', nameGuj: 'તૃપ્તિ પ્રતિકકુમાર શાહ', nameEn: 'Trupti Pratikkumar Shah', gender: 'F', gen: 3, spouseId: 'pratik', branch: 'dilip' },
+            { id: 'harshil', nameGuj: 'હર્ષિલ દિલીપકુમાર શાહ', nameEn: 'Harshil Dilipkumar Shah', gender: 'M', gen: 3, parentIds: ['dilip', 'sudha'], spouseId: 'disha', childrenIds: ['rahi', 'parv'], branch: 'dilip' },
+            { id: 'disha', nameGuj: 'દિશા હર્ષિલકુમાર શાહ', nameEn: 'Disha Harshilkumar Shah', gender: 'F', gen: 3, spouseId: 'harshil', branch: 'dilip' },
+            { id: 'apoorv', nameGuj: 'અપૂર્વ નિશિતભાઈ શાહ', nameEn: 'Apoorv Nishitbhai Shah', gender: 'M', gen: 3, parentIds: ['nishit', 'dharmishtha'], spouseId: 'palak', childrenIds: ['divam', 'saiyam'], branch: 'nishit' },
+            { id: 'palak', nameGuj: 'પલક અપૂર્વભાઈ શાહ', nameEn: 'Palak Apoorvbhai Shah', gender: 'F', gen: 3, spouseId: 'apoorv', branch: 'nishit' },
+            { id: 'sanket', nameGuj: 'સંકેત નિશિતભાઈ શાહ', nameEn: 'Sanket Nishitbhai Shah', gender: 'M', gen: 3, parentIds: ['nishit', 'dharmishtha'], spouseId: 'kreenal', childrenIds: ['pahal'], branch: 'nishit' },
+            { id: 'kreenal', nameGuj: 'ક્રીનલ સંકેતભાઈ શાહ', nameEn: 'Kreenal Sanketbhai Shah', gender: 'F', gen: 3, spouseId: 'sanket', branch: 'nishit' },
+            { id: 'prashant', nameGuj: 'પ્રશાંતભાઈ નવનીતરાઈ શાહ', nameEn: 'Prashantbhai Navnitrai Shah', gender: 'M', gen: 3, parentIds: ['navnitrai', 'pushpa'], spouseId: 'nita', childrenIds: ['khyati', 'jinagna'], branch: 'pushpa' },
+            { id: 'nita', nameGuj: 'નીતાબેન પ્રશાંતભાઈ શાહ', nameEn: 'Nitaben Prashantbhai Shah', gender: 'F', gen: 3, spouseId: 'prashant', branch: 'pushpa' },
+            { id: 'rupin', nameGuj: 'રૂપિનભાઈ નવનીતરાઈ શાહ', nameEn: 'Rupinbhai Navnitrai Shah', gender: 'M', gen: 3, parentIds: ['navnitrai', 'pushpa'], branch: 'pushpa' },
+            { id: 'mona', nameGuj: 'મોનાબેન જિતેન્દ્રભાઈ શાહ', nameEn: 'Monaben Jitendrabhai Shah', gender: 'F', gen: 3, parentIds: ['vinodrai', 'rasila'], spouseId: 'jitendra_m', branch: 'rasila' },
+            { id: 'jitendra_m', nameGuj: 'જિતેન્દ્રભાઈ શાહ', nameEn: 'Jitendrabhai Shah', gender: 'M', gen: 3, spouseId: 'mona', childrenIds: ['darshan', 'priya_m'], branch: 'rasila' },
+            { id: 'shruti', nameGuj: 'શ્રુતિબેન વિનોદરાઈ શાહ', nameEn: 'Shrutiben Vinodrai Shah', gender: 'F', gen: 3, parentIds: ['vinodrai', 'rasila'], branch: 'rasila' },
+            { id: 'malay', nameGuj: 'મલયભાઈ વિનોદરાઈ શાહ', nameEn: 'Malaybhai Vinodrai Shah', gender: 'M', gen: 3, parentIds: ['vinodrai', 'rasila'], spouseId: 'ankita', childrenIds: ['meet'], branch: 'rasila' },
+            { id: 'ankita', nameGuj: 'અંકિતા મલયભાઈ શાહ', nameEn: 'Ankita Malaybhai Shah', gender: 'F', gen: 3, spouseId: 'malay', branch: 'rasila' },
+            { id: 'hetal', nameGuj: 'હેતલબેન ધર્મેશકુમાર', nameEn: 'Hetalben Dharmeshkumar', gender: 'F', gen: 3, parentIds: ['vinaykant', 'hansaben'], spouseId: 'dharmesh_h', branch: 'hansaben' },
+            { id: 'dharmesh_h', nameGuj: 'ધર્મેશકુમાર', nameEn: 'Dharmeshkumar', gender: 'M', gen: 3, spouseId: 'hetal', childrenIds: ['aayushi'], branch: 'hansaben' },
+            { id: 'keyur', nameGuj: 'કેયુરભાઈ વિનયકાંત શાહ', nameEn: 'Keyurbhai Vinaykant Shah', gender: 'M', gen: 3, parentIds: ['vinaykant', 'hansaben'], spouseId: 'rajvi', childrenIds: ['priya_k', 'megh'], branch: 'hansaben' },
+            { id: 'rajvi', nameGuj: 'રાજવી કેયુરભાઈ શાહ', nameEn: 'Rajvi Keyurbhai Shah', gender: 'F', gen: 3, spouseId: 'keyur', branch: 'hansaben' },
+            { id: 'shrey', nameGuj: 'શ્રેય રુચિરભાઈ શાહ', nameEn: 'Shrey Ruchirbhai Shah', gender: 'M', gen: 4, parentIds: ['ruchir', 'tejal'], branch: 'bhupendra' },
+            { id: 'dev', nameGuj: 'દેવ પૂર્વાંશભાઈ શાહ', nameEn: 'Dev Purvanshbhai Shah', gender: 'M', gen: 4, parentIds: ['purvansh', 'dipali'], branch: 'bhupendra' },
+            { id: 'neel', nameGuj: 'નીલ પૂર્વાંશભાઈ શાહ', nameEn: 'Neel Purvanshbhai Shah', gender: 'M', gen: 4, parentIds: ['purvansh', 'dipali'], branch: 'bhupendra' },
+            { id: 'naavya', nameGuj: 'નાવ્યા જિનેશભાઈ શાહ', nameEn: 'Navya Jineshbhai Shah', gender: 'F', gen: 4, parentIds: ['jinesh', 'bina'], branch: 'harshad' },
+            { id: 'veer', nameGuj: 'વીર દિજેનભાઈ શાહ', nameEn: 'Veer Dijenbhai Shah', gender: 'M', gen: 4, parentIds: ['dijen', 'munmun'], branch: 'harshad' },
+            { id: 'heet', nameGuj: 'હીત દિજેનભાઈ શાહ', nameEn: 'Heet Dijenbhai Shah', gender: 'M', gen: 4, parentIds: ['dijen', 'munmun'], branch: 'harshad' },
+            { id: 'hishita', nameGuj: 'હિશિતા દિજેનભાઈ શાહ', nameEn: 'Hishita Dijenbhai Shah', gender: 'F', gen: 4, parentIds: ['dijen', 'munmun'], branch: 'harshad' },
+            { id: 'het', nameGuj: 'હેત પ્રતીકભાઈ શાહ', nameEn: 'Het Pratikkumar Shah', gender: 'M', gen: 4, parentIds: ['pratik', 'trupti'], branch: 'dilip' },
+            { id: 'jainam', nameGuj: 'જૈનમ પ્રતિકકુમાર શાહ', nameEn: 'Jainam Pratikkumar Shah', gender: 'M', gen: 4, parentIds: ['pratik', 'trupti'], branch: 'dilip' },
+            { id: 'rahi', nameGuj: 'રાહી હર્ષિલકુમાર શાહ', nameEn: 'Rahi Harshilkumar Shah', gender: 'F', gen: 4, parentIds: ['harshil', 'disha'], branch: 'dilip' },
+            { id: 'parv', nameGuj: 'પર્વ હર્ષિલકુમાર શાહ', nameEn: 'Parv Harshilkumar Shah', gender: 'M', gen: 4, parentIds: ['harshil', 'disha'], branch: 'dilip' },
+            { id: 'divam', nameGuj: 'દિવમ અપૂર્વભાઈ શાહ', nameEn: 'Divam Apoorvbhai Shah', gender: 'M', gen: 4, parentIds: ['apoorv', 'palak'], branch: 'nishit' },
+            { id: 'saiyam', nameGuj: 'સૈયમ અપૂર્વભાઈ શાહ', nameEn: 'Saiyam Apoorvbhai Shah', gender: 'M', gen: 4, parentIds: ['apoorv', 'palak'], branch: 'nishit' },
+            { id: 'pahal', nameGuj: 'પહેલ સંકેતભાઈ શાહ', nameEn: 'Pahal Sanketbhai Shah', gender: 'F', gen: 4, parentIds: ['sanket', 'kreenal'], branch: 'nishit' },
+            { id: 'khyati', nameGuj: 'ખ્યાતી પ્રશાંતભાઈ શાહ', nameEn: 'Khyati Prashantbhai Shah', gender: 'F', gen: 4, parentIds: ['prashant', 'nita'], branch: 'pushpa' },
+            { id: 'jinagna', nameGuj: 'જિનાગ્ના પ્રશાંતભાઈ શાહ', nameEn: 'Jinagna Prashantbhai Shah', gender: 'F', gen: 4, parentIds: ['prashant', 'nita'], branch: 'pushpa' },
+            { id: 'darshan', nameGuj: 'દર્શનભાઈ જિતેન્દ્રભાઈ', nameEn: 'Darshanbhai Jitendrabhai', gender: 'M', gen: 4, parentIds: ['jitendra_m', 'mona'], spouseId: 'birva', childrenIds: ['ivaan'], branch: 'rasila' },
+            { id: 'birva', nameGuj: 'બિરવા દર્શનભાઈ', nameEn: 'Birva Darshanbhai', gender: 'F', gen: 4, spouseId: 'darshan', branch: 'rasila' },
+            { id: 'priya_m', nameGuj: 'પ્રિયા જૈનમભાઈ શાહ', nameEn: 'Priya Jainambhai Shah', gender: 'F', gen: 4, parentIds: ['jitendra_m', 'mona'], spouseId: 'jainam_p', branch: 'rasila' },
+            { id: 'jainam_p', nameGuj: 'જૈનમભાઈ શાહ', nameEn: 'Jainambhai Shah', gender: 'M', gen: 4, spouseId: 'priya_m', branch: 'rasila' },
+            { id: 'meet', nameGuj: 'મીત મલયભાઈ શાહ', nameEn: 'Meet Malaybhai Shah', gender: 'M', gen: 4, parentIds: ['malay', 'ankita'], branch: 'rasila' },
+            { id: 'aayushi', nameGuj: 'આયુષી ધર્મેશકુમાર', nameEn: 'Aayushi Dharmeshkumar', gender: 'F', gen: 4, parentIds: ['dharmesh_h', 'hetal'], branch: 'hansaben' },
+            { id: 'priya_k', nameGuj: 'પ્રિશા કેયુરભાઈ', nameEn: 'Prisha Keyurbhai', gender: 'F', gen: 4, parentIds: ['keyur', 'rajvi'], branch: 'hansaben' },
+            { id: 'megh', nameGuj: 'મેઘ કેયુરભાઈ', nameEn: 'Megh Keyurbhai', gender: 'M', gen: 4, parentIds: ['keyur', 'rajvi'], branch: 'hansaben' },
+            { id: 'ivaan', nameGuj: 'ઈવાન દર્શનભાઈ', nameEn: 'Ivaan Darshanbhai', gender: 'M', gen: 5, parentIds: ['darshan', 'birva'], branch: 'rasila' },
+        ];
+
+        const memberMap = {};
+        MEMBERS.forEach(m => { memberMap[m.id] = m; });
+
+        // Helper: strip surname for display
+        function stripShah(name) { return name.replace(/ Shah$/i, '').trim(); }
+        function stripShahGuj(name) { return name.replace(/ શાહ$/, '').trim(); }
+
+        // ─── LAYOUT ──────────────────────────────────────────────────────────────────
+        const CARD_W = 94;
+        const CARD_H = 70;
+        const SPOUSE_GAP = 16;
+        const COUPLE_W = CARD_W * 2 + SPOUSE_GAP;
+        const H_GAP = 24;
+        const V_GAP = 140;
+        const PAD_TOP = 30;
+        const PAD_LEFT = 40;
+        const CHILD_SINGLE_W = CARD_W;
+
+        function computeLayout() {
+            const positions = {};
+            const gen2Children = ['bhupendra', 'pushpa', 'rasila', 'hansaben', 'harshad', 'dilip', 'nishit'];
+
+            const gen3ByParent = {
+                bhupendra: ['ruchir', 'purvansh'],
+                harshad: ['jinesh', 'dijen'],
+                dilip: ['pratik', 'harshil'],
+                nishit: ['apoorv', 'sanket'],
+                pushpa: ['prashant', 'rupin'],
+                rasila: ['mona', 'shruti', 'malay'],
+                hansaben: ['hetal', 'keyur'],
+            };
+
+            const gen4ByParent = {
+                ruchir: ['shrey'],
+                purvansh: ['dev', 'neel'],
+                jinesh: ['naavya'],
+                dijen: ['veer', 'heet', 'hishita'],
+                pratik: ['het', 'jainam'],
+                harshil: ['rahi', 'parv'],
+                apoorv: ['divam', 'saiyam'],
+                sanket: ['pahal'],
+                prashant: ['khyati', 'jinagna'],
+                mona: ['darshan', 'priya_m'],
+                malay: ['meet'],
+                hetal: ['aayushi'],
+                keyur: ['priya_k', 'megh'],
+                darshan: ['ivaan'],
+            };
+
+            function gen4ItemWidth(kidId) {
+                const kid = memberMap[kidId];
+                return (kid && kid.spouseId) ? COUPLE_W : CHILD_SINGLE_W;
+            }
+
+            function gen4GroupWidth(gen3Id) {
+                const kids = gen4ByParent[gen3Id] || [];
+                const m = memberMap[gen3Id];
+                const minW = (m && m.spouseId) ? COUPLE_W : CHILD_SINGLE_W;
+                if (kids.length === 0) return minW;
+                let total = 0;
+                kids.forEach((kid, i) => {
+                    total += gen4ItemWidth(kid);
+                    if (i < kids.length - 1) total += H_GAP;
+                });
+                return Math.max(minW, total);
+            }
+
+            function gen3ItemWidth(cid) {
+                const m = memberMap[cid];
+                const minW = (m && m.spouseId) ? COUPLE_W : CHILD_SINGLE_W;
+                return Math.max(minW, gen4GroupWidth(cid));
+            }
+
+            function gen3GroupWidth(gen2Id) {
+                const children = gen3ByParent[gen2Id] || [];
+                if (children.length === 0) return COUPLE_W;
+                let total = 0;
+                children.forEach((cid, i) => {
+                    total += gen3ItemWidth(cid);
+                    if (i < children.length - 1) total += H_GAP;
+                });
+                return Math.max(COUPLE_W, total);
+            }
+
+            const gen2Widths = gen2Children.map(sid => Math.max(COUPLE_W, gen3GroupWidth(sid)));
+            const totalWidth = gen2Widths.reduce((a, b) => a + b, 0) + (gen2Children.length - 1) * H_GAP;
+            const genY = { 1: PAD_TOP, 2: PAD_TOP + V_GAP, 3: PAD_TOP + V_GAP * 2, 4: PAD_TOP + V_GAP * 3, 5: PAD_TOP + V_GAP * 4 };
+
+            let x2 = PAD_LEFT;
+            const gen2CenterX = {};
+            gen2Children.forEach((sid, i) => {
+                const blockW = gen2Widths[i];
+                const centerX = x2 + blockW / 2;
+                gen2CenterX[sid] = centerX;
+                const hx = centerX - COUPLE_W / 2;
+                positions[sid] = { x: hx, y: genY[2] };
+                const m = memberMap[sid];
+                if (m && m.spouseId) {
+                    positions[m.spouseId] = { x: hx + CARD_W + SPOUSE_GAP, y: genY[2] };
+                }
+                x2 += blockW + H_GAP;
+            });
+
+            const overallCenterX = PAD_LEFT + totalWidth / 2;
+            positions['kantilal'] = { x: overallCenterX - COUPLE_W / 2, y: genY[1] };
+            positions['lilavanti'] = { x: overallCenterX - COUPLE_W / 2 + CARD_W + SPOUSE_GAP, y: genY[1] };
+
+            gen2Children.forEach((g2id, i) => {
+                const children = gen3ByParent[g2id] || [];
+                let cx = gen2CenterX[g2id] - gen2Widths[i] / 2;
+                children.forEach(cid => {
+                    const m = memberMap[cid];
+                    const hasSpouse = m && m.spouseId;
+                    const unitW = gen3ItemWidth(cid);
+                    const centerX = cx + unitW / 2;
+
+                    if (hasSpouse) {
+                        const hx = centerX - COUPLE_W / 2;
+                        positions[cid] = { x: hx, y: genY[3] };
+                        positions[m.spouseId] = { x: hx + CARD_W + SPOUSE_GAP, y: genY[3] };
+                    } else {
+                        positions[cid] = { x: centerX - CARD_W / 2, y: genY[3] };
+                    }
+
+                    const kids = gen4ByParent[cid] || [];
+                    if (kids.length > 0) {
+                        let kidsW = 0;
+                        kids.forEach((kid, ki) => {
+                            kidsW += gen4ItemWidth(kid);
+                            if (ki < kids.length - 1) kidsW += H_GAP;
+                        });
+                        let kx = centerX - kidsW / 2;
+                        kids.forEach(kid => {
+                            const kidM = memberMap[kid];
+                            positions[kid] = { x: kx, y: genY[4] };
+                            if (kidM && kidM.spouseId) {
+                                positions[kidM.spouseId] = { x: kx + CARD_W + SPOUSE_GAP, y: genY[4] };
+                                // Gen 5: children of gen4 couples
+                                if (kidM.childrenIds && kidM.childrenIds.length > 0) {
+                                    const g5CenterX = kx + COUPLE_W / 2;
+                                    let g5TotalW = 0;
+                                    kidM.childrenIds.forEach((g5id, g5i) => {
+                                        g5TotalW += CHILD_SINGLE_W;
+                                        if (g5i < kidM.childrenIds.length - 1) g5TotalW += H_GAP;
+                                    });
+                                    let g5x = g5CenterX - g5TotalW / 2;
+                                    kidM.childrenIds.forEach(g5id => {
+                                        positions[g5id] = { x: g5x, y: genY[5] };
+                                        g5x += CHILD_SINGLE_W + H_GAP;
+                                    });
+                                }
+                                kx += COUPLE_W + H_GAP;
+                            } else {
+                                kx += CHILD_SINGLE_W + H_GAP;
+                            }
+                        });
+                    }
+                    cx += unitW + H_GAP;
+                });
+            });
+            return { positions, genY, totalWidth };
+        }
+
+        // ─── COMPONENTS ──────────────────────────────────────────────────────────────
+        const { useState, useMemo, useCallback, useEffect, useRef } = React;
+
+        function hexToRgba(hex, alpha) {
+            const r = parseInt(hex.slice(1, 3), 16), g = parseInt(hex.slice(3, 5), 16), b = parseInt(hex.slice(5, 7), 16);
+            return `rgba(${r},${g},${b},${alpha})`;
+        }
+
+        function Card({ member, pos, onClick, isSelected, animDelay }) {
+            const color = BRANCH_COLORS[member.branch] || BRANCH_COLORS.root;
+            const grad = BRANCH_GRADIENTS[member.branch] || BRANCH_GRADIENTS.root;
+            const isRoot = member.gen === 1;
+
+            return (
+                <div
+                    onClick={() => onClick(member.id)}
+                    className="tree-card"
+                    style={{
+                        position: 'absolute',
+                        left: pos.x,
+                        top: pos.y,
+                        width: CARD_W,
+                        height: CARD_H,
+                        borderRadius: 10,
+                        border: isRoot ? `2px solid ${color}` : `1.5px solid ${hexToRgba(color, 0.5)}`,
+                        background: isRoot
+                            ? `linear-gradient(135deg, ${hexToRgba(grad[0], 0.12)}, ${hexToRgba(grad[1], 0.06)})`
+                            : `linear-gradient(135deg, #fff, ${hexToRgba(color, 0.05)})`,
+                        boxShadow: isSelected
+                            ? `0 0 0 3px ${hexToRgba(color, 0.4)}, 0 8px 24px ${hexToRgba(color, 0.2)}`
+                            : `0 2px 8px rgba(0,0,0,0.08), 0 1px 3px rgba(0,0,0,0.06)`,
+                        cursor: 'pointer',
+                        display: 'flex',
+                        flexDirection: 'column',
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                        padding: '12px 5px 6px',
+                        overflow: 'visible',
+                        zIndex: 2,
+                        transition: 'all 0.25s cubic-bezier(0.4,0,0.2,1)',
+                        animation: `cardFadeIn 0.5s ${animDelay}ms both cubic-bezier(0.4,0,0.2,1)`,
+                    }}
+                >
+                    {/* Colored top accent bar */}
+                    <div style={{
+                        position: 'absolute', top: 0, left: 10, right: 10, height: 2.5,
+                        borderRadius: '0 0 2px 2px',
+                        background: `linear-gradient(90deg, ${grad[0]}, ${grad[1]})`,
+                    }} />
+                    {/* Gender badge */}
+                    <span style={{
+                        position: 'absolute', top: -5, right: -3,
+                        width: 16, height: 16, borderRadius: '50%',
+                        background: member.gender === 'M'
+                            ? 'linear-gradient(135deg, #457B9D, #6BA3C0)'
+                            : 'linear-gradient(135deg, #D64045, #E8686C)',
+                        color: '#fff', fontSize: 9, fontWeight: 700,
+                        display: 'flex', alignItems: 'center', justifyContent: 'center',
+                        boxShadow: '0 2px 6px rgba(0,0,0,0.15)',
+                        border: '2px solid #fff',
+                        lineHeight: 1, userSelect: 'none',
+                    }}>
+                        {member.gender === 'M' ? '♂' : '♀'}
+                    </span>
+                    {/* Gujarati name */}
+                    <div style={{
+                        fontFamily: "'Noto Sans Gujarati', sans-serif",
+                        fontSize: 10, fontWeight: 700, color: '#1a1a1a',
+                        textAlign: 'center', lineHeight: 1.55,
+                        wordBreak: 'break-word', paddingTop: 2,
+                    }}>
+                        {stripShahGuj(member.nameGuj)}
+                    </div>
+                    {/* English name */}
+                    <div style={{
+                        fontSize: 8, color: '#888', fontWeight: 500,
+                        textAlign: 'center', lineHeight: 1.3, marginTop: 2,
+                        whiteSpace: 'nowrap', textOverflow: 'ellipsis',
+                        overflow: 'hidden', width: '100%',
+                        letterSpacing: 0.2,
+                    }}>
+                        {stripShah(member.nameEn)}
+                    </div>
+                </div>
+            );
+        }
+
+        function SpouseConnector({ pos1, pos2, color }) {
+            const leftX = Math.min(pos1.x, pos2.x);
+            const rightX = Math.max(pos1.x, pos2.x);
+            const x1 = leftX + CARD_W + 2;
+            const x2 = rightX - 2;
+            const cy = pos1.y + CARD_H / 2;
+            return (
+                <g>
+                    <line x1={x1} y1={cy - 2.5} x2={x2} y2={cy - 2.5} stroke={hexToRgba(color, 0.5)} strokeWidth={1.5} />
+                    <line x1={x1} y1={cy + 2.5} x2={x2} y2={cy + 2.5} stroke={hexToRgba(color, 0.5)} strokeWidth={1.5} />
+                </g>
+            );
+        }
+
+        function ConnectingLines({ positions }) {
+            const lines = [];
+            const connections = [];
+
+            MEMBERS.forEach(m => {
+                if (m.childrenIds && m.childrenIds.length > 0 && m.gender === 'M') {
+                    const parentPos = positions[m.id];
+                    if (!parentPos) return;
+                    const spousePos = m.spouseId ? positions[m.spouseId] : null;
+                    const parentCenterX = spousePos
+                        ? (parentPos.x + CARD_W / 2 + spousePos.x + CARD_W / 2) / 2
+                        : parentPos.x + CARD_W / 2;
+                    const parentBottomY = parentPos.y + CARD_H;
+
+                    m.childrenIds.forEach(cid => {
+                        const childPos = positions[cid];
+                        if (!childPos) return;
+                        const child = memberMap[cid];
+                        const childCenterX = childPos.x + CARD_W / 2;
+                        const childTopY = childPos.y;
+                        connections.push({ parentId: m.id, childId: cid, parentCenterX, parentBottomY, childCenterX, childTopY, branch: child.branch, genGap: `${m.gen}-${m.gen + 1}` });
+                    });
+                }
+            });
+
+            const byGenGap = {};
+            connections.forEach(c => { if (!byGenGap[c.genGap]) byGenGap[c.genGap] = []; byGenGap[c.genGap].push(c); });
+
+            Object.keys(byGenGap).forEach(gap => {
+                const group = byGenGap[gap];
+                group.sort((a, b) => a.parentCenterX - b.parentCenterX || a.childCenterX - b.childCenterX);
+                const busY = (group[0].parentBottomY + group[0].childTopY) / 2;
+                const byParent = {};
+                group.forEach(c => { if (!byParent[c.parentId]) byParent[c.parentId] = []; byParent[c.parentId].push(c); });
+
+                Object.values(byParent).forEach(parentGroup => {
+                    const n = parentGroup.length;
+                    parentGroup.forEach((c, i) => {
+                        const laneOffset = (i - (n - 1) / 2) * 10;
+                        const thisBusY = busY + laneOffset;
+                        const color = BRANCH_COLORS[c.branch] || BRANCH_COLORS.root;
+                        const lineColor = hexToRgba(color, 0.45);
+                        lines.push(
+                            <g key={`${c.parentId}-${c.childId}`}>
+                                <line x1={c.parentCenterX} y1={c.parentBottomY} x2={c.parentCenterX} y2={thisBusY} stroke={lineColor} strokeWidth={1.5} />
+                                <line x1={c.parentCenterX} y1={thisBusY} x2={c.childCenterX} y2={thisBusY} stroke={lineColor} strokeWidth={1.5} />
+                                <line x1={c.childCenterX} y1={thisBusY} x2={c.childCenterX} y2={c.childTopY - 2} stroke={lineColor} strokeWidth={1.5} />
+                                <polygon points={`${c.childCenterX - 4},${c.childTopY - 6} ${c.childCenterX + 4},${c.childTopY - 6} ${c.childCenterX},${c.childTopY - 1}`} fill={color} opacity={0.6} />
+                            </g>
+                        );
+                    });
+                });
+            });
+            return <>{lines}</>;
+        }
+
+        function DetailPanel({ member, onClose }) {
+            if (!member) return null;
+            const color = BRANCH_COLORS[member.branch] || BRANCH_COLORS.root;
+            const grad = BRANCH_GRADIENTS[member.branch] || BRANCH_GRADIENTS.root;
+            const parents = (member.parentIds || []).map(pid => memberMap[pid]).filter(Boolean);
+            const spouse = member.spouseId ? memberMap[member.spouseId] : null;
+            const ownChildren = member.childrenIds || [];
+            const spouseChildren = (spouse && spouse.childrenIds) ? spouse.childrenIds : [];
+            const allChildIds = [...new Set([...ownChildren, ...spouseChildren])];
+            const children = allChildIds.map(cid => memberMap[cid]).filter(Boolean);
+
+            const Section = ({ title, items }) => items.length === 0 ? null : (
+                <div style={{ marginBottom: 16 }}>
+                    <div style={{ fontSize: 9, fontWeight: 700, color: '#aaa', textTransform: 'uppercase', letterSpacing: 1.2, marginBottom: 6 }}>{title}</div>
+                    {items.map(p => (
+                        <div key={p.id} style={{
+                            fontSize: 12, color: '#444', marginBottom: 4, padding: '4px 8px',
+                            background: hexToRgba(color, 0.05), borderRadius: 6, display: 'flex', alignItems: 'center', gap: 6,
+                        }}>
+                            <span style={{
+                                width: 16, height: 16, borderRadius: '50%', fontSize: 8,
+                                background: p.gender === 'M' ? 'linear-gradient(135deg,#457B9D,#6BA3C0)' : 'linear-gradient(135deg,#D64045,#E8686C)',
+                                color: '#fff', display: 'inline-flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0,
+                            }}>{p.gender === 'M' ? '♂' : '♀'}</span>
+                            {p.nameEn}
+                        </div>
+                    ))}
+                </div>
+            );
+
+            return (
+                <div style={{
+                    position: 'fixed', top: 0, right: 0, width: 280, height: '100vh',
+                    background: '#fff', borderLeft: '1px solid #eee',
+                    boxShadow: '-8px 0 40px rgba(0,0,0,0.08)',
+                    zIndex: 100, overflowY: 'auto',
+                    fontFamily: 'Inter, sans-serif',
+                    animation: 'slideIn 0.3s cubic-bezier(0.4,0,0.2,1)',
+                    display: 'flex', flexDirection: 'column',
+                }}>
+                    {/* Header gradient */}
+                    <div style={{
+                        background: `linear-gradient(135deg, ${grad[0]}, ${grad[1]})`,
+                        padding: '24px 20px 20px', position: 'relative',
+                    }}>
+                        <button onClick={onClose} style={{
+                            position: 'absolute', top: 12, right: 12,
+                            background: 'rgba(255,255,255,0.2)', backdropFilter: 'blur(4px)',
+                            border: 'none', borderRadius: '50%',
+                            width: 28, height: 28, cursor: 'pointer',
+                            fontSize: 14, fontWeight: 700, color: '#fff',
+                            display: 'flex', alignItems: 'center', justifyContent: 'center',
+                            transition: 'background 0.15s',
+                        }}
+                            onMouseEnter={e => e.currentTarget.style.background = 'rgba(255,255,255,0.35)'}
+                            onMouseLeave={e => e.currentTarget.style.background = 'rgba(255,255,255,0.2)'}
+                        >×</button>
+                        <div style={{
+                            width: 44, height: 44, borderRadius: '50%',
+                            background: 'rgba(255,255,255,0.2)', backdropFilter: 'blur(4px)',
+                            border: '2px solid rgba(255,255,255,0.5)',
+                            display: 'flex', alignItems: 'center', justifyContent: 'center',
+                            fontSize: 22, marginBottom: 12, color: '#fff',
+                        }}>
+                            {member.gender === 'M' ? '♂' : '♀'}
+                        </div>
+                        <div style={{ marginBottom: 4 }}>
+                            <div style={{
+                                fontFamily: "'Noto Sans Gujarati', sans-serif",
+                                fontSize: 16, fontWeight: 700, color: '#fff', lineHeight: 1.4,
+                                textShadow: '0 1px 3px rgba(0,0,0,0.15)',
+                            }}>
+                                {member.nameGuj}
+                            </div>
+                        </div>
+                        <div style={{ fontSize: 12, color: 'rgba(255,255,255,0.85)', fontWeight: 500 }}>
+                            {member.nameEn}
+                        </div>
+                    </div>
+                    {/* Content */}
+                    <div style={{ padding: '20px', flex: 1 }}>
+                        <Section title="Parents" items={parents} />
+                        {spouse && <Section title="Spouse" items={[spouse]} />}
+                        <Section title="Children" items={children} />
+                    </div>
+                </div>
+            );
+        }
+
+        function Legend() {
+            const branches = [
+                { key: 'root', label: 'Root (Kantilal & Lilavanti)' },
+                { key: 'bhupendra', label: "Bhupendrabhai's Branch" },
+                { key: 'harshad', label: "Harshadbhai's Branch" },
+                { key: 'dilip', label: "Dilipkumar's Branch" },
+                { key: 'nishit', label: "Nishit's Branch" },
+                { key: 'pushpa', label: "Pushpaben's Branch" },
+                { key: 'rasila', label: "Rasilaben's Branch" },
+                { key: 'hansaben', label: "Hansaben's Branch" },
+            ];
+            return (
+                <div style={{
+                    display: 'flex', justifyContent: 'center', gap: 20, flexWrap: 'wrap',
+                    padding: '20px 30px', margin: '10px auto 0',
+                    background: 'rgba(255,255,255,0.6)', backdropFilter: 'blur(8px)',
+                    borderRadius: 14, maxWidth: 900,
+                    boxShadow: '0 1px 4px rgba(0,0,0,0.04)',
+                }}>
+                    {branches.map(b => (
+                        <div key={b.key} style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+                            <div style={{
+                                width: 12, height: 12, borderRadius: 4,
+                                background: `linear-gradient(135deg, ${BRANCH_GRADIENTS[b.key][0]}, ${BRANCH_GRADIENTS[b.key][1]})`,
+                                boxShadow: `0 1px 3px ${hexToRgba(BRANCH_COLORS[b.key], 0.3)}`,
+                            }} />
+                            <span style={{ fontSize: 11, color: '#666', fontWeight: 500 }}>{b.label}</span>
+                        </div>
+                    ))}
+                </div>
+            );
+        }
+
+        function FamilyTree() {
+            const [selectedId, setSelectedId] = useState(null);
+            const layout = useMemo(() => computeLayout(), []);
+            const { positions, genY, totalWidth } = layout;
+
+            const handleCardClick = useCallback(id => {
+                setSelectedId(prev => prev === id ? null : id);
+            }, []);
+
+            const selectedMember = selectedId ? memberMap[selectedId] : null;
+            const canvasW = totalWidth + PAD_LEFT * 2 + 80;
+            const canvasH = (genY[5] || genY[4]) + CARD_H + PAD_TOP + 30;
+
+            const spousePairs = MEMBERS
+                .filter(m => m.gender === 'M' && m.spouseId && positions[m.spouseId])
+                .map(m => ({ husband: m.id, wife: m.spouseId, branch: m.branch }));
+
+            const getDelay = (m) => {
+                const base = (m.gen - 1) * 200;
+                const idx = MEMBERS.filter(x => x.gen === m.gen).indexOf(m);
+                return base + idx * 40;
+            };
+
+            return (
+                <div style={{ minHeight: '100vh', paddingBottom: 40 }}>
+
+                    {/* Compact Header */}
+                    <div style={{
+                        display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 10,
+                        padding: '10px 20px',
+                        background: 'linear-gradient(135deg, rgba(69,123,157,0.08), rgba(106,76,147,0.06))',
+                        borderBottom: '1px solid rgba(0,0,0,0.04)',
+                    }}>
+                        <div style={{
+                            width: 28, height: 28, borderRadius: '50%',
+                            background: 'linear-gradient(135deg, #457B9D, #6A4C93)',
+                            display: 'flex', alignItems: 'center', justifyContent: 'center',
+                            boxShadow: '0 2px 8px rgba(69,123,157,0.2)',
+                            fontSize: 14, color: '#fff', flexShrink: 0,
+                        }}>🌳</div>
+                        <h1 style={{
+                            fontFamily: "'Noto Sans Gujarati', 'Playfair Display', serif",
+                            fontSize: 18, fontWeight: 700, color: '#1a1a1a', margin: 0,
+                            letterSpacing: -0.3,
+                        }}>શાહ કુટુંબ વૃક્ષ</h1>
+                        <span style={{
+                            fontFamily: "'Playfair Display', serif",
+                            fontSize: 10, color: '#999', fontWeight: 400,
+                            letterSpacing: 1.5, textTransform: 'uppercase',
+                        }}>Shah Family Tree</span>
+                    </div>
+
+                    {/* Tree Canvas */}
+                    <div style={{
+                        position: 'relative', width: canvasW, minHeight: canvasH,
+                        margin: '20px auto 0',
+                    }}>
+                        <svg style={{ position: 'absolute', top: 0, left: 0, width: canvasW, height: canvasH, pointerEvents: 'none', zIndex: 1 }}>
+                            {spousePairs.map(sp => {
+                                const hp = positions[sp.husband];
+                                const wp = positions[sp.wife];
+                                if (!hp || !wp) return null;
+                                const color = BRANCH_COLORS[sp.branch] || BRANCH_COLORS.root;
+                                return <SpouseConnector key={sp.husband + '-spouse'} pos1={hp} pos2={wp} color={color} />;
+                            })}
+                            <ConnectingLines positions={positions} />
+                        </svg>
+                        {MEMBERS.map(m => {
+                            const pos = positions[m.id];
+                            if (!pos) return null;
+                            return (
+                                <Card
+                                    key={m.id}
+                                    member={m}
+                                    pos={pos}
+                                    onClick={handleCardClick}
+                                    isSelected={selectedId === m.id}
+                                    animDelay={getDelay(m)}
+                                />
+                            );
+                        })}
+                    </div>
+
+                    {/* Detail Panel */}
+                    {selectedMember && (
+                        <DetailPanel member={selectedMember} onClose={() => setSelectedId(null)} />
+                    )}
+
+                    {/* Footer */}
+                    <div style={{
+                        textAlign: 'center', padding: '30px 20px 20px',
+                        fontSize: 11, color: '#bbb', fontWeight: 500,
+                    }}>
+                        {MEMBERS.length} Members · {Math.max(...MEMBERS.map(m => m.gen))} Generations · Shah Family
+                    </div>
+
+                    <style>{`
+        @keyframes slideIn {
+          from { transform: translateX(280px); opacity: 0; }
+          to { transform: translateX(0); opacity: 1; }
+        }
+        @keyframes cardFadeIn {
+          from { opacity: 0; transform: translateY(16px); }
+          to { opacity: 1; transform: translateY(0); }
+        }
+        .tree-card:hover {
+          transform: translateY(-3px) !important;
+          box-shadow: 0 8px 20px rgba(0,0,0,0.12), 0 2px 6px rgba(0,0,0,0.08) !important;
+        }
+      `}</style>
+                </div>
+            );
+        }
+
+        ReactDOM.createRoot(document.getElementById('root')).render(<FamilyTree />);
+    </script>
+</body>
+
+</html>
